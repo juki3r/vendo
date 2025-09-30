@@ -11,6 +11,3 @@ Route::get('/ping', function () {
 
 Route::post('/onlineCheck', [Esp8266Controller::class, 'onlineCheck']);
 Route::post('/responseUpdate', [Esp8266Controller::class, 'responseUpdate']);
-
-Route::get('/esp8266s/{id}/add-rates', [Esp8266Controller::class, 'createRates'])->name('esp8266s.createRates');
-Route::post('/esp8266s/{id}/store-rates', [Esp8266Controller::class, 'storeRates'])->name('esp8266s.storeRates');
