@@ -20,6 +20,7 @@ class Esp8266Controller extends Controller
         }
 
         $request->validate([
+            'user_id' => 'required|string',
             'device_id' => 'required|string',
             'status' => 'required|string',
         ]);
@@ -29,6 +30,8 @@ class Esp8266Controller extends Controller
 
         // Update device status (last_seen & status)
         $esp->updateOrCreate([
+            'user_id' => $request->user_id,
+            'device_id' => $request->device_id,
             'last_seen' => now(),
             'device_status' => $request->status, // make sure you have a column for this
         ]);
