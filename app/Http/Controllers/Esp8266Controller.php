@@ -43,7 +43,7 @@ class Esp8266Controller extends Controller
             'device_status' => $esp->device_status,
             'last_seen' => $esp->last_seen,
             'rates' => [
-                '1' => 10,
+                '1' => 60,
                 '5' => 120,
                 '10' => 240
             ],
