@@ -14,10 +14,17 @@ class Esp8266Controller extends Controller
         // // Find user/device by API key
         $user = User::where('api_key', $apiKey)->first();
 
+        $request->validate([
+            'user_id' => 'required|string',
+            'device_id' => 'required|string',
+            'status' => 'required|string',
+        ]);
+
         return response()->json([
             'status' => 'success',
             'api_key' => $apiKey,
             'user' => $user,
+            'user_id' => $request->user_id,
         ]);
 
         // $apiKey = $request->header('X-API-KEY');
