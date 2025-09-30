@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Esp8266;
 use Illuminate\Http\Request;
 
 class Esp8266Controller extends Controller
@@ -13,7 +14,7 @@ class Esp8266Controller extends Controller
         ]);
 
         // Save/update device status
-        $device = Device::updateOrCreate(
+        $device = Esp8266::updateOrCreate(
             ['device_id' => $request->device_id],
             ['last_seen' => now()]
         );
