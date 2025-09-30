@@ -24,12 +24,15 @@ class Esp8266Controller extends Controller
         $esp = Esp8266::where('user_id', $request->user_id)->first();
 
         // // Update device status (last_seen & status)
-        $esp->updateOrCreate([
-            'user_id' => $request->user_id,
-            'device_id' => $request->device_id,
-            'last_seen' => now(),
-            'device_status' => $request->status, // make sure you have a column for this
-        ]);
+        $esp = Esp8266::updateOrCreate(
+            ['device_id' => $request->device_id], // search condition
+            [
+                'user_id' => $request->user_id,
+                'device_status' => $request->status,
+                'last_seen' => now(),
+            ]
+        );
+
 
 
         if (!$esp) {
