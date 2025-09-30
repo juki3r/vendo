@@ -46,7 +46,6 @@ class Esp8266Controller extends Controller
                 '1' => 10,
                 '5' => 120,
                 '10' => 240,
-                '20' => 1440,
             ],
         ]);
     }
