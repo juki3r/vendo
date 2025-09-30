@@ -57,33 +57,59 @@
                                         <tr>
                                             <th class="px-4 py-2 text-left border">Coin (₱)</th>
                                             <th class="px-4 py-2 text-left border">Time</th>
+                                            <th class="px-4 py-2 text-center border">Actions</th>
                                         </tr>
-                                    </thead>
+                                        </thead>
                                     <tbody class="divide-y divide-gray-200">
                                         @foreach($rates as $coin => $minutes)
-                                            <tr>
-                                                <td class="px-4 py-2 border font-semibold">₱{{ $coin }}</td>
-                                                <td class="px-4 py-2 border">
-                                                    @php
-                                                        $mins = (int) $minutes;
-                                                        if ($mins >= 60) {
-                                                            $days = floor($mins / 1440);
-                                                            $hours = floor(($mins % 1440) / 60);
-                                                            $remMins = $mins % 60;
+                                        <tr>
+                                            <td class="px-4 py-2 border font-semibold">₱{{ $coin }}</td>
+                                            <td class="px-4 py-2 border">
+                                                @php
+                                                    $mins = (int) $minutes;
+                                                    if ($mins >= 60) {
+                                                        $days = floor($mins / 1440);
+                                                        $hours = floor(($mins % 1440) / 60);
+                                                        $remMins = $mins % 60;
 
-                                                            $display = '';
-                                                            if ($days > 0) $display .= $days.' day'.($days>1?'s ':' ');
-                                                            if ($hours > 0) $display .= $hours.' hour'.($hours>1?'s ':' ');
-                                                            if ($remMins > 0) $display .= $remMins.' minute'.($remMins>1?'s':'');
-                                                        } else {
-                                                            $display = $mins.' minute'.($mins>1?'s':'');
-                                                        }
-                                                    @endphp
-                                                    {{ $display }}
-                                                </td>
-                                            </tr>
+                                                        $display = '';
+                                                        if ($days > 0) $display .= $days.' day'.($days>1?'s ':' ');
+                                                        if ($hours > 0) $display .= $hours.' hour'.($hours>1?'s ':' ');
+                                                        if ($remMins > 0) $display .= $remMins.' minute'.($remMins>1?'s':'');
+                                                    } else {
+                                                        $display = $mins.' minute'.($mins>1?'s':'');
+                                                    }
+                                                @endphp
+                                                {{ $display }}
+                                            </td>
+                                            <td class="px-4 py-2 border text-center space-x-2">
+                                                {{-- Edit Form --}}
+                                                <form action="{{ route('esp8266s.updateRate', [$esp->id, $coin]) }}" method="POST" class="inline-block">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <input type="number" name="minutes" value="{{ $minutes }}"
+                                                        class="w-24 border rounded p-1 text-sm" required>
+                                                    <button type="submit"
+                                                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">
+                                                        Update
+                                                    </button>
+                                                </form>
+
+                                                {{-- Delete Form --}}
+                                                <form action="{{ route('esp8266s.deleteRate', [$esp->id, $coin]) }}" method="POST" class="inline-block"
+                                                    onsubmit="return confirm('Delete ₱{{ $coin }} rate?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                            class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm">
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
                                         @endforeach
-                                    </tbody>
+                                        </tbody>
+
                                 </table>
                             </div>
                         @endif

@@ -35,4 +35,44 @@ class DashboardController extends Controller
 
         return back()->with('success', 'Rate added successfully!');
     }
+    // Update a rate
+    public function updateRate(Request $request, $espId, $coin)
+    {
+        $request->validate([
+            'minutes' => 'required|integer|min:1',
+        ]);
+
+        $esp = Esp8266::where('user_id', Auth::id())
+            ->findOrFail($espId);
+
+        $rates = json_decode($esp->rates ?? '{}', true);
+
+        if (!isset($rates[$coin])) {
+            return back()->with('error', 'Rate not found.');
+        }
+
+        $rates[$coin] = $request->minutes;
+        $esp->rates = json_encode($rates);
+        $esp->save();
+
+        return back()->with('success', "Rate ₱{$coin} updated!");
+    }
+
+    // Delete a rate
+    public function deleteRate($espId, $coin)
+    {
+        $esp = Esp8266::where('user_id', Auth::id())
+            ->findOrFail($espId);
+
+        $rates = json_decode($esp->rates ?? '{}', true);
+
+        if (isset($rates[$coin])) {
+            unset($rates[$coin]);
+            $esp->rates = json_encode($rates);
+            $esp->save();
+            return back()->with('success', "Rate ₱{$coin} deleted!");
+        }
+
+        return back()->with('error', 'Rate not found.');
+    }
 }

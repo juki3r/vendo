@@ -18,6 +18,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/esp8266s', [DashboardController::class, 'showRates'])->name('esp8266s');
     Route::post('/esp8266s/{esp}/rates', [DashboardController::class, 'storeRate'])
         ->name('esp8266s.storeRate');
+    Route::put('/esp8266s/{esp}/rates/{coin}', [DashboardController::class, 'updateRate'])->name('esp8266s.updateRate');
+    Route::delete('/esp8266s/{esp}/rates/{coin}', [DashboardController::class, 'deleteRate'])->name('esp8266s.deleteRate');
 });
 
 Route::middleware('auth')->group(function () {
