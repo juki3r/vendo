@@ -42,6 +42,11 @@ class Esp8266Controller extends Controller
             'user_id' => $user->id,
             'device_status' => $esp->device_status,
             'last_seen' => $esp->last_seen,
+            'rates' => [
+                '1' => 60,
+                '5' => 120,
+                '10' => 240
+            ],
         ]);
     }
 }
