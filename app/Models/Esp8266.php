@@ -11,5 +11,6 @@ class Esp8266 extends Model
         'user_id',
         'device_status',
         'last_seen',
+        'rates',
     ];
 }
