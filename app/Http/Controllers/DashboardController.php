@@ -9,70 +9,50 @@ use Illuminate\Support\Facades\Auth;
 class DashboardController extends Controller
 {
 
-    public function showRates()
+    public function index()
     {
-        // Get all ESP8266 devices belonging to the authenticated user
         $esps = Esp8266::where('user_id', Auth::id())->get();
-
         return view('esp8266s.index', compact('esps'));
     }
 
-    public function storeRate(Request $request, $espId)
+    public function storeRate(Request $request, Esp8266 $esp)
     {
-        $request->validate([
+        $data = $request->validate([
             'coin'    => 'required|numeric|min:1',
-            'minutes' => 'required|integer|min:1',
+            'minutes' => 'required|numeric|min:1',
         ]);
 
-        $esp = Esp8266::where('user_id', Auth::id())
-            ->findOrFail($espId);
-
         $rates = json_decode($esp->rates ?? '{}', true);
-        $rates[$request->coin] = $request->minutes;
-
+        $rates[$data['coin']] = $data['minutes'];
         $esp->rates = json_encode($rates);
         $esp->save();
 
         return back()->with('success', 'Rate added successfully!');
     }
-    // Update a rate
-    public function updateRate(Request $request, $espId, $coin)
+
+    public function updateRate(Request $request, Esp8266 $esp, $coin)
     {
-        $request->validate([
-            'minutes' => 'required|integer|min:1',
+        $data = $request->validate([
+            'minutes' => 'required|numeric|min:1',
         ]);
 
-        $esp = Esp8266::where('user_id', Auth::id())
-            ->findOrFail($espId);
-
         $rates = json_decode($esp->rates ?? '{}', true);
-
-        if (!isset($rates[$coin])) {
-            return back()->with('error', 'Rate not found.');
+        if (isset($rates[$coin])) {
+            $rates[$coin] = $data['minutes'];
+            $esp->rates = json_encode($rates);
+            $esp->save();
         }
 
-        $rates[$coin] = $request->minutes;
+        return back()->with('success', "Rate ₱$coin updated!");
+    }
+
+    public function deleteRate(Esp8266 $esp, $coin)
+    {
+        $rates = json_decode($esp->rates ?? '{}', true);
+        unset($rates[$coin]);
         $esp->rates = json_encode($rates);
         $esp->save();
 
-        return back()->with('success', "Rate ₱{$coin} updated!");
-    }
-
-    // Delete a rate
-    public function deleteRate($espId, $coin)
-    {
-        $esp = Esp8266::where('user_id', Auth::id())
-            ->findOrFail($espId);
-
-        $rates = json_decode($esp->rates ?? '{}', true);
-
-        if (isset($rates[$coin])) {
-            unset($rates[$coin]);
-            $esp->rates = json_encode($rates);
-            $esp->save();
-            return back()->with('success', "Rate ₱{$coin} deleted!");
-        }
-
-        return back()->with('error', 'Rate not found.');
+        return back()->with('success', "Rate ₱$coin deleted!");
     }
 }
