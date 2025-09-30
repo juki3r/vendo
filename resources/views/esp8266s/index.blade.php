@@ -13,7 +13,9 @@
         @endif
 
         @forelse($esps as $esp)
-            @php $rates = json_decode($esp->rates ?? '{}', true); @endphp
+            @php
+                $rates = $esp->rates ?? [];
+            @endphp
 
             <div class="card mb-5 shadow-sm">
                 <div class="card-body">

@@ -22,9 +22,11 @@ class DashboardController extends Controller
             'minutes' => 'required|numeric|min:1',
         ]);
 
-        $rates = json_decode($esp->rates ?? '{}', true);
+        // Now $esp->rates is already an array
+        $rates = $esp->rates ?? [];
         $rates[$data['coin']] = $data['minutes'];
-        $esp->rates = json_encode($rates);
+
+        $esp->rates = $rates;
         $esp->save();
 
         return back()->with('success', 'Rate added successfully!');
@@ -36,10 +38,10 @@ class DashboardController extends Controller
             'minutes' => 'required|numeric|min:1',
         ]);
 
-        $rates = json_decode($esp->rates ?? '{}', true);
+        $rates = $esp->rates ?? [];
         if (isset($rates[$coin])) {
             $rates[$coin] = $data['minutes'];
-            $esp->rates = json_encode($rates);
+            $esp->rates = $rates;
             $esp->save();
         }
 
@@ -48,9 +50,10 @@ class DashboardController extends Controller
 
     public function deleteRate(Esp8266 $esp, $coin)
     {
-        $rates = json_decode($esp->rates ?? '{}', true);
+        $rates = $esp->rates ?? [];
         unset($rates[$coin]);
-        $esp->rates = json_encode($rates);
+
+        $esp->rates = $rates;
         $esp->save();
 
         return back()->with('success', "Rate ₱$coin deleted!");
