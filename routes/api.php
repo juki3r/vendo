@@ -9,4 +9,4 @@ Route::get('/ping', function () {
     return response()->json(['message' => 'API is working!']);
 });
 
-Route::get('/onlineCheck', [Esp8266Controller::class, 'onlineCheck']);
+Route::post('/onlineCheck', [Esp8266Controller::class, 'onlineCheck']);
