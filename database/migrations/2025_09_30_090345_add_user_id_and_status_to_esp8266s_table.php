@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('esp8266s', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id')->nullable()->after('id');
             $table->string('device_status')->nullable();
+            $table->timestamp('last_seen')->nullable();
         });
     }
 
@@ -25,6 +26,7 @@ return new class extends Migration
         Schema::table('esp8266s', function (Blueprint $table) {
             $table->dropColumn('user_id');
             $table->dropColumn('device_status');
+            $table->dropColumn('last_seen');
         });
     }
 };
