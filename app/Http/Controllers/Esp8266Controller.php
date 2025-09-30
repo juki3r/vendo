@@ -51,51 +51,57 @@ class Esp8266Controller extends Controller
 
     public function onlineCheck(Request $request)
     {
+        // ─── Authenticate ───
         $apiKey = $request->header('X-API-KEY');
-
-        // Find user by API key
         $user = User::where('api_key', $apiKey)->first();
 
         if (!$user) {
-            return response()->json(['status' => 'error', 'message' => 'Unauthorized'], 401);
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Unauthorized'
+            ], 401);
         }
 
-        // Validate request body
+        // ─── Validate input ───
         $request->validate([
-            'user_id' => 'required|integer',
+            'user_id'   => 'required|integer',
             'device_id' => 'required|string',
-            'status' => 'required|string',
+            'status'    => 'required|string',
         ]);
 
-        // Update or create ESP record
+        // ─── Update or create ESP record ───
         $esp = Esp8266::updateOrCreate(
-            ['device_id' => $request->device_id],
             [
-                'user_id'       => $request->user_id,
+                'device_id' => $request->device_id,
+                'user_id'   => $request->user_id,
+            ],
+            [
                 'device_status' => $request->status,
                 'last_seen'     => now(),
             ]
         );
 
-        // If rates is empty, set defaults
-        if (empty($esp->rates)) {
-            $esp->rates = json_encode([
-                '1'  => 10,   // ₱1 = 10 minutes
-                '5'  => 120,  // ₱5 = 120 minutes
-                '10' => 240,  // ₱10 = 240 minutes
-            ]);
+        // ─── If rates is empty, set default rates ───
+        if (empty($esp->rates) || !is_array($esp->rates)) {
+            $esp->rates = [
+                '1'  => 10,    // ₱1 → 10 minutes
+                '5'  => 120,   // ₱5 → 120 minutes
+                '10' => 240,   // ₱10 → 240 minutes
+            ];
             $esp->save();
         }
 
+        // ─── Return response ───
         return response()->json([
             'status'        => 'success',
             'api_key'       => $apiKey,
             'user_id'       => $user->id,
             'device_status' => $esp->device_status,
             'last_seen'     => $esp->last_seen,
-            'rates'         => json_decode($esp->rates, true),
+            'rates'         => $esp->rates,  // no decode/encode needed
         ]);
     }
+
 
 
     //response from esp
