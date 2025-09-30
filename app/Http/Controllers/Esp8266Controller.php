@@ -48,4 +48,26 @@ class Esp8266Controller extends Controller
             ],
         ]);
     }
+
+    //response from esp
+    public function responseUpdate(Request $request)
+    {
+        $apiKey = $request->header('X-API-KEY');
+
+        // Find user by API key
+        $user = User::where('api_key', $apiKey)->first();
+
+        if (!$user) {
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized'], 401);
+        }
+
+        // Validate request body
+        $request->validate([
+            'user_id' => 'required|integer',   // match your users.id type
+            'device_id' => 'required|string',
+            'response_update' => 'required|string',
+        ]);
+
+        //Update where the response_update is.
+    }
 }

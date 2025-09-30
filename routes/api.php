@@ -10,3 +10,4 @@ Route::get('/ping', function () {
 });
 
 Route::post('/onlineCheck', [Esp8266Controller::class, 'onlineCheck']);
+Route::post('/responseUpdate', [Esp8266Controller::class, 'responseUpdate']);
