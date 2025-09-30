@@ -9,13 +9,13 @@ use Illuminate\Support\Facades\Auth;
 class DashboardController extends Controller
 {
 
-    //rates show
     public function showRates()
     {
-        $esp = Esp8266::where('user_id', Auth::id())->firstOrFail();
-        return view('esp8266s.index', compact('esp'));
-    }
+        // Get all ESP8266 devices belonging to the authenticated user
+        $esps = Esp8266::where('user_id', Auth::id())->get();
 
+        return view('esp8266s.index', compact('esps'));
+    }
     public function createRates($id)
     {
         $esp = Esp8266::findOrFail($id);
