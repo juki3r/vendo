@@ -11,9 +11,13 @@ class Esp8266Controller extends Controller
     public function onlineCheck(Request $request)
     {
         $apiKey = $request->header('X-API-KEY');
+        // // Find user/device by API key
+        $user = User::where('api_key', $apiKey)->first();
+
         return response()->json([
             'status' => 'success',
             'api_key' => $apiKey,
+            'user' => $user,
         ]);
 
         // $apiKey = $request->header('X-API-KEY');
