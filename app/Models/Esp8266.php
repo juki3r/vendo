@@ -13,4 +13,9 @@ class Esp8266 extends Model
         'last_seen',
         'rates',
     ];
+
+
+    protected $casts = [
+        'rates' => 'array',
+    ];
 }
