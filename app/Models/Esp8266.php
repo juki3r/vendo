@@ -8,5 +8,5 @@ class Esp8266 extends Model
 {
     protected $fillable = [
         'device_id'
-    ]
+    ];
 }
