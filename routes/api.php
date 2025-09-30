@@ -6,5 +6,5 @@ use App\Http\Controllers\Api\PostController;
 
 
 Route::get('/ping', function () {
-    return response()->json(['message' => 'API is working!']);
+    return response()->json(['message' => 'API is working again!']);
 });
