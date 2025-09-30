@@ -16,8 +16,8 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/esp8266s', [DashboardController::class, 'showRates'])->name('esp8266s');
-    Route::get('/esp8266s/{id}/add-rates', [DashboardController::class, 'createRates'])->name('esp8266s.createRates');
-    Route::post('/esp8266s/{id}/store-rates', [DashboardController::class, 'storeRates'])->name('esp8266s.storeRates');
+    Route::post('/esp8266s/{esp}/rates', [DashboardController::class, 'storeRate'])
+        ->name('esp8266s.storeRate');
 });
 
 Route::middleware('auth')->group(function () {

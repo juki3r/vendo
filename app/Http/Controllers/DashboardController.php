@@ -16,30 +16,23 @@ class DashboardController extends Controller
 
         return view('esp8266s.index', compact('esps'));
     }
-    public function createRates($id)
-    {
-        $esp = Esp8266::findOrFail($id);
-        return view('esp8266s.create-rates', compact('esp'));
-    }
 
-    public function storeRates(Request $request, $id)
+    public function storeRate(Request $request, $espId)
     {
-        $esp = Esp8266::findOrFail($id);
-
         $request->validate([
-            'coins.*'   => 'required|integer|min:1',
-            'minutes.*' => 'required|integer|min:1',
+            'coin'    => 'required|numeric|min:1',
+            'minutes' => 'required|integer|min:1',
         ]);
 
-        $rates = [];
-        foreach ($request->coins as $i => $coin) {
-            $rates[$coin] = $request->minutes[$i];
-        }
+        $esp = Esp8266::where('user_id', Auth::id())
+            ->findOrFail($espId);
 
-        $esp->rates = $rates;
+        $rates = json_decode($esp->rates ?? '{}', true);
+        $rates[$request->coin] = $request->minutes;
+
+        $esp->rates = json_encode($rates);
         $esp->save();
 
-        return redirect()->route('esp8266s.index')
-            ->with('success', 'Rates added successfully!');
+        return back()->with('success', 'Rate added successfully!');
     }
 }
