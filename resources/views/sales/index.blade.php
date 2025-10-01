@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 overflow-x-auto">
-                    <div class="responsive-table">
+                    <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover table-sm">
                         <thead class="">
                             <tr>
@@ -34,11 +34,10 @@
                             @endforelse
                         </tbody>
                     </table>
-
-                        <!-- Pagination -->
-                        <div class="mt-4">
-                            {{ $sales->links() }}
-                        </div>
+                    </div>
+                    <!-- Bootstrap Pagination -->
+                    <div class="mt-3">
+                        {{ $sales->links() }}
                     </div>
 
                 </div>
