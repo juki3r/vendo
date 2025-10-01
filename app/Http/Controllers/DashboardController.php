@@ -61,12 +61,21 @@ class DashboardController extends Controller
     }
 
     //View all sales
-    public function viewSales()
+    public function viewSales(Request $request)
     {
-        // Get all sales for the currently logged-in user
-        $sales = Sales::where('user_id', Auth::id())->get();
+        $query = Sale::where('user_id', Auth::id());
 
-        // Pass the sales to the view
+        // Search by voucher
+        if ($request->has('search') && $request->search != '') {
+            $query->where('voucher', 'like', '%' . $request->search . '%');
+        }
+
+        // Paginate 10 per page
+        $sales = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        // Keep the search query in pagination links
+        $sales->appends($request->only('search'));
+
         return view('sales.index', compact('sales'));
     }
 }
