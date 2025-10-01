@@ -19,7 +19,7 @@
 
             <div class="card mb-5 shadow-sm">
                 <div class="card-body">
-                    <h6 class="card-title fw-bold d-flex justify-content-between align-items-center" style="font-size: 16px !important">
+                    <h6 class="card-title fw-bold d-flex justify-content-between align-items-center text-primary" style="font-size: 16px !important; font-weight:500 !important">
                         <div class="d-flex flex-column" >
                             <span>{{ $esp->name ?? 'Vendo #'.$esp->id }}</span>
                             <span>{{ $esp->name ?? 'Vendo ID: '.$esp->device_id }}</span>
