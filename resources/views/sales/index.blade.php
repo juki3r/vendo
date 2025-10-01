@@ -36,9 +36,34 @@
                 </div>
 
                 <!-- Bootstrap Pagination -->
-                <div class="mt-3">
+                {{-- <div class="mt-3">
                     {{ $sales->links() }}
-                </div>
+                </div> --}}
+                @if ($sales->hasPages())
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+
+                            {{-- Previous Page Link --}}
+                            <li class="page-item {{ $sales->onFirstPage() ? 'disabled' : '' }}">
+                                <a class="page-link" href="{{ $sales->previousPageUrl() }}">Previous</a>
+                            </li>
+
+                            {{-- Pagination Elements --}}
+                            @foreach ($sales->getUrlRange(1, $sales->lastPage()) as $page => $url)
+                                <li class="page-item {{ $sales->currentPage() == $page ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                </li>
+                            @endforeach
+
+                            {{-- Next Page Link --}}
+                            <li class="page-item {{ $sales->hasMorePages() ? '' : 'disabled' }}">
+                                <a class="page-link" href="{{ $sales->nextPageUrl() }}">Next</a>
+                            </li>
+
+                        </ul>
+                    </nav>
+                    @endif
+
             </div>
         </div>
     </div>
