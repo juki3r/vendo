@@ -45,7 +45,7 @@
                                     <tr>
                                         <th>Coin (₱)</th>
                                         <th>Time</th>
-                                        <th width="200">Actions</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
