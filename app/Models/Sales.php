@@ -5,19 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Esp8266 extends Model
+class Sales extends Model
 {
     use HasFactory;
+
     protected $fillable = [
+        'voucher',
+        'minutes',
+        'coins',
+        'ip',
+        'mac',
         'device_id',
         'user_id',
-        'device_status',
-        'last_seen',
-        'rates',
-    ];
-
-
-    protected $casts = [
-        'rates' => 'array',
     ];
 }
