@@ -22,7 +22,7 @@
                     <h5 class="card-title fw-bold d-flex justify-content-center align-items-center">
                         <span class="d-flex justify-content-center align-items-center">
                             {{ $esp->name ?? 'Vendo #'.$esp->id }}
-                            {{ $esp->name ?? 'Vendo ID: '.$esp->id }}
+                            {{ $esp->name ?? 'Vendo ID: '.$esp->device_id }}
                         </span>
                         
                     </h5>
