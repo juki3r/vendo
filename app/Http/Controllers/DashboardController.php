@@ -63,7 +63,7 @@ class DashboardController extends Controller
     //View all sales
     public function viewSales(Request $request)
     {
-        $query = Sale::where('user_id', Auth::id());
+        $query = Sales::where('user_id', Auth::id());
 
         // Search by voucher
         if ($request->has('search') && $request->search != '') {
