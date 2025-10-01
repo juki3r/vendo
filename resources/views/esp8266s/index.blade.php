@@ -20,10 +20,10 @@
             <div class="card mb-5 shadow-sm">
                 <div class="card-body">
                     <h6 class="card-title fw-bold d-flex justify-content-between align-items-center">
-                        <span class="d-flex justify-content-center align-items-center flex-column">
-                            {{ $esp->name ?? 'Vendo #'.$esp->id }}
-                            {{ $esp->name ?? 'Vendo ID: '.$esp->device_id }}
-                        </span>
+                        <div class="d-flex justify-content-center align-items-center flex-column">
+                            <span>{{ $esp->name ?? 'Vendo #'.$esp->id }}</span>
+                            <span>{{ $esp->name ?? 'Vendo ID: '.$esp->device_id }}</span>
+                        </div>
                         {{-- Add Rate Button --}}
                         <button class="btn btn-primary btn-sm mb-3"
                                 data-bs-toggle="modal"
