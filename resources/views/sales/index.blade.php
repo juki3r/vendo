@@ -10,7 +10,7 @@
 
             <!-- Search Form -->
             <div class="mb-4">
-                <form method="GET" action="{{ route('sales.index') }}" class="flex items-center space-x-2">
+                <form method="GET" action="{{ route('viewSales') }}" class="flex items-center space-x-2">
                     <input 
                         type="text" 
                         name="search" 
