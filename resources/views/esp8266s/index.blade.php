@@ -40,7 +40,7 @@
                         <p class="text-muted">No rates found. Click “Add Rate”.</p>
                     @else
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped align-middle">
+                            <table class="table table-bordered table-striped">
                                 <thead class="table-light">
                                     <tr>
                                         <th>Coin (₱)</th>
