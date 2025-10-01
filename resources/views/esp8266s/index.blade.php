@@ -25,7 +25,7 @@
                             <span>{{ $esp->name ?? 'Vendo ID: '.$esp->device_id }}</span>
                         </div>
                         {{-- Add Rate Button --}}
-                        <button class="btn btn-primary btn-sm mb-3"
+                        <button class="btn btn-primary btn-sm"
                                 data-bs-toggle="modal"
                                 data-bs-target="#addRateModal{{ $esp->id }}">
                             + Add Rate
