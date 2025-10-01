@@ -65,16 +65,7 @@ class DashboardController extends Controller
     {
         $query = Sales::where('user_id', Auth::id())->orderBy('created_at', 'desc');
 
-        // Search by voucher
-        if ($request->has('search') && $request->search != '') {
-            $query->where('voucher', 'like', '%' . $request->search . '%');
-        }
-
         $sales = $query->paginate(10);
-
-        if ($request->ajax()) {
-            return view('sales.partials.sales_table', compact('sales'))->render();
-        }
 
         return view('sales.index', compact('sales'));
     }
