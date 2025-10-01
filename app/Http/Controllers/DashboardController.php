@@ -63,7 +63,8 @@ class DashboardController extends Controller
     //View all sales
     public function viewSales(Request $request)
     {
-        $query = Sales::where('user_id', Auth::id());
+        $query = Sales::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc');
 
         // Search by voucher
         if ($request->has('search') && $request->search != '') {
@@ -71,11 +72,12 @@ class DashboardController extends Controller
         }
 
         // Paginate 10 per page
-        $sales = $query->orderBy('created_at', 'desc')->paginate(10);
+        $sales = $query->paginate(10);
 
-        // Keep the search query in pagination links
+        // Keep search in pagination links
         $sales->appends($request->only('search'));
 
+        // Return view with pagination data
         return view('sales.index', compact('sales'));
     }
 }
