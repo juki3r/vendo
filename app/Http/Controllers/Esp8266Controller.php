@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Sales;
 use App\Models\Esp8266;
 use Illuminate\Http\Request;
 
@@ -115,5 +116,25 @@ class Esp8266Controller extends Controller
         ]);
 
         //Update where the response_update is.
+    }
+
+    public function storeVendoSales(Request $request)
+    {
+        $data = $request->validate([
+            'voucher'    => 'required|string',
+            'minutes'    => 'required|integer',
+            'coins'      => 'required|integer',
+            'ip'         => 'nullable|string',
+            'mac'        => 'nullable|string',
+            'device_id'  => 'required|string',
+            'user_id'    => 'required|integer',
+        ]);
+
+        $sale = Sales::create($data);
+
+        return response()->json([
+            'success' => true,
+            'sale'    => $sale,
+        ], 201);
     }
 }
