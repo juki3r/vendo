@@ -19,8 +19,12 @@
 
             <div class="card mb-5 shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title fw-bold">
-                        {{ $esp->name ?? 'ESP8266 #'.$esp->id }}
+                    <h5 class="card-title fw-bold d-flex justify-content-center align-items-center">
+                        <span class="d-flex justify-content-center align-items-center">
+                            {{ $esp->name ?? 'Vendo #'.$esp->id }}
+                            {{ $esp->name ?? 'Vendo ID: '.$esp->id }}
+                        </span>
+                        
                     </h5>
 
                     {{-- Add Rate Button --}}
