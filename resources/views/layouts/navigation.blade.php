@@ -20,7 +20,7 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('esp8266s.index')" :active="request()->routeIs('esp8266s.index')">
-                        {{ __("Vendo's") }}
+                        {{ __("Vendo Rates") }}
                     </x-nav-link>
                 </div>
             </div>
@@ -81,7 +81,7 @@
 
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('esp8266s.index')" :active="request()->routeIs('esp8266s.index')">
-                {{ __("Vendo's") }}
+                {{ __("Vendo Rates") }}
             </x-responsive-nav-link>
         </div>
 
