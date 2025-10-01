@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Sales;
 use App\Models\Esp8266;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -57,5 +58,15 @@ class DashboardController extends Controller
         $esp->save();
 
         return back()->with('success', "Rate ₱$coin deleted!");
+    }
+
+    //View all sales
+    public function viewSales()
+    {
+        // Get all sales for the currently logged-in user
+        $sales = Sales::where('user_id', Auth::id())->get();
+
+        // Pass the sales to the view
+        return view('sales.index', compact('sales'));
     }
 }

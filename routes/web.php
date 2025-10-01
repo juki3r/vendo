@@ -15,11 +15,16 @@ Route::get('/dashboard', function () {
 
 
 Route::middleware('auth')->group(function () {
+    //Show all esp8266
     Route::get('/vendo', [DashboardController::class, 'index'])->name('esp8266s.index');
 
+    // CRUD WIFI TIMER RATES
     Route::post('/vendo/{esp}/rates', [DashboardController::class, 'storeRate'])->name('esp8266s.storeRate');
     Route::put('/vendo/{esp}/rates/{coin}', [DashboardController::class, 'updateRate'])->name('esp8266s.updateRate');
     Route::delete('/vendo/{esp}/rates/{coin}', [DashboardController::class, 'deleteRate'])->name('esp8266s.deleteRate');
+
+    //View all sales
+    Route::get('/view/sales', [DashboardController::class, 'viewSales'])->name('viewSales');
 });
 
 Route::middleware('auth')->group(function () {
