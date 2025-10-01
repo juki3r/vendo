@@ -30,7 +30,7 @@
             $('#search').on('keyup', function() {
                 let query = $(this).val();
                 $.ajax({
-                    url: "{{ route('sales.index') }}",
+                    url: "{{ route('viewSales') }}",
                     type: "GET",
                     data: { search: query },
                     success: function(data) {
