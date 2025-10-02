@@ -194,17 +194,17 @@ class Esp8266Controller extends Controller
             $ip       = explode('|', $client['ip'])[0];
             $mac      = explode('|', $client['mac'])[0];
 
-            // Extract uptime and remaining_seconds from remaining_time string
             $raw = $client['remaining_time'];
 
             // Uptime is before first '|'
             $uptime = explode('|', $raw)[0] ?? '0s';
 
-            // Session time left
-            $remaining = '0s';
-            if (str_contains($raw, '=session-time-left=')) {
-                preg_match('/=session-time-left=([0-9hms]+)/', $raw, $matches);
-                $remaining = $matches[1] ?? '0s';
+            // Default remaining seconds
+            $remainingSeconds = 0;
+
+            // Extract session time left (in seconds)
+            if (preg_match('/=session-time-left=(\d+)/', $raw, $matches)) {
+                $remainingSeconds = (int)$matches[1];
             }
 
             ActiveClient::updateOrCreate(
@@ -217,11 +217,10 @@ class Esp8266Controller extends Controller
                     'ip'                => $ip,
                     'mac'               => $mac,
                     'uptime'            => $uptime,
-                    'remaining_seconds' => $remaining,
+                    'remaining_seconds' => $remainingSeconds,
                 ]
             );
         }
-
 
         return response()->json([
             'status' => 'success',
