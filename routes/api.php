@@ -12,3 +12,4 @@ Route::get('/ping', function () {
 Route::post('/onlineCheck', [Esp8266Controller::class, 'onlineCheck']);
 Route::post('/responseUpdate', [Esp8266Controller::class, 'responseUpdate']);
 Route::post('/salesHistory', [Esp8266Controller::class, 'storeVendoSales']);
+Route::post('/active-clients', [Esp8266Controller::class, 'store']);

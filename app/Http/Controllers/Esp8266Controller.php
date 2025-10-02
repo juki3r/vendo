@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Sales;
 use App\Models\Esp8266;
+use App\Models\ActiveClient;
 use Illuminate\Http\Request;
 
 class Esp8266Controller extends Controller
@@ -136,5 +137,39 @@ class Esp8266Controller extends Controller
             'success' => true,
             'sale'    => $sale,
         ], 201);
+    }
+
+    //Save Active clients belong to device made
+    public function store(Request $request)
+    {
+        $request->validate([
+            'device_id' => 'required|string',
+            'user_id'   => 'required|string',
+            'clients'   => 'required|array',
+            'clients.*.username' => 'required|string',
+            'clients.*.ip'       => 'required|string',
+            'clients.*.mac'      => 'required|string',
+            'clients.*.uptime'   => 'required|string',
+        ]);
+
+        foreach ($request->clients as $client) {
+            ActiveClient::updateOrCreate(
+                [
+                    'device_id' => $request->device_id,
+                    'username'  => $client['username'],
+                ],
+                [
+                    'user_id' => $request->user_id,
+                    'ip'      => $client['ip'],
+                    'mac'     => $client['mac'],
+                    'uptime'  => $client['uptime'],
+                ]
+            );
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Active clients saved',
+        ]);
     }
 }
