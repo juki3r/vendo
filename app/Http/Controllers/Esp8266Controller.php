@@ -150,6 +150,7 @@ class Esp8266Controller extends Controller
             'clients.*.ip'       => 'required|string',
             'clients.*.mac'      => 'required|string',
             'clients.*.uptime'   => 'required|string',
+            'clients.*.remaining_seconds'   => 'required|string',
         ]);
 
 
@@ -165,6 +166,7 @@ class Esp8266Controller extends Controller
                     'ip'      => explode('|', $client['ip'])[0],
                     'mac'     => explode('|', $client['mac'])[0],
                     'uptime'  => explode('|', $client['uptime'])[0],
+                    'uptime'  => explode('|', $client['remaining_seconds'])[0],
                 ]
             );
         }
