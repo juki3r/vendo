@@ -74,10 +74,9 @@ class DashboardController extends Controller
     //View all active Clients
     public function indexActiveClient(Request $request)
     {
-        $deviceId = $request->get('device_id'); // get device_id from query string or route
+        // $deviceId = $request->get('device_id'); // get device_id from query string or route
 
         $clients = ActiveClient::where('user_id', auth()->id())
-            ->where('device_id', $deviceId)
             ->orderBy('updated_at', 'desc')
             ->get();
 
