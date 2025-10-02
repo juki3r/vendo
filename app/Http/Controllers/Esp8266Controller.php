@@ -152,17 +152,19 @@ class Esp8266Controller extends Controller
             'clients.*.uptime'   => 'required|string',
         ]);
 
+
+
         foreach ($request->clients as $client) {
             ActiveClient::updateOrCreate(
                 [
                     'device_id' => $request->device_id,
-                    'username'  => $client['username'],
+                    'username'  => explode('|', $client['username'])[0],
                 ],
                 [
                     'user_id' => $request->user_id,
-                    'ip'      => $client['ip'],
-                    'mac'     => $client['mac'],
-                    'uptime'  => $client['uptime'],
+                    'ip'      => explode('|', $client['ip'])[0],
+                    'mac'     => explode('|', $client['mac'])[0],
+                    'uptime'  => explode('|', $client['uptime'])[0],
                 ]
             );
         }
