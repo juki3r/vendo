@@ -80,6 +80,6 @@ class DashboardController extends Controller
             ->orderBy('updated_at', 'desc')
             ->get();
 
-        return view('active_clients.index', compact('clients', 'deviceId'));
+        return view('active_clients.index', compact('clients'));
     }
 }
