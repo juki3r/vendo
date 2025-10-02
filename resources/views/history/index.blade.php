@@ -19,7 +19,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($sales as $sale)
+                            @forelse($history as $sale)
                                 <tr>
                                     <td>{{ $loop->iteration + ($sales->currentPage() - 1) * $sales->perPage() }}</td>
                                     <td>{{ $sale->voucher }}</td>

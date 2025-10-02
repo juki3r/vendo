@@ -24,8 +24,8 @@
                 </div>
 
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('viewSales')" :active="request()->routeIs('viewSales')">
-                        {{ __("Vendo Sales") }}
+                    <x-nav-link :href="route('viewSalesHistory')" :active="request()->routeIs('viewSalesHistory')">
+                        {{ __("Sales History") }}
                     </x-nav-link>
                 </div>
             </div>
@@ -91,8 +91,8 @@
         </div>
 
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('viewSales')" :active="request()->routeIs('viewSales')">
-                {{ __("Vendo Sales") }}
+            <x-responsive-nav-link :href="route('viewSalesHistory')" :active="request()->routeIs('viewSalesHistory')">
+                {{ __("Sales History") }}
             </x-responsive-nav-link>
         </div>
 

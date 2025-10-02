@@ -24,7 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/vendo/{esp}/rates/{coin}', [DashboardController::class, 'deleteRate'])->name('esp8266s.deleteRate');
 
     //View all sales
-    Route::get('/view/sales', [DashboardController::class, 'viewSales'])->name('viewSales');
+    Route::get('/view/sales', [DashboardController::class, 'viewSalesHistory'])->name('viewSalesHistory');
 });
 
 Route::middleware('auth')->group(function () {

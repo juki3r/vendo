@@ -61,12 +61,12 @@ class DashboardController extends Controller
     }
 
     //View all sales
-    public function viewSales(Request $request)
+    public function viewSalesHistory(Request $request)
     {
         $query = Sales::where('user_id', Auth::id())->orderBy('created_at', 'desc');
 
-        $sales = $query->paginate(10);
+        $history = $query->paginate(10);
 
-        return view('sales.index', compact('sales'));
+        return view('history.index', compact('history'));
     }
 }
