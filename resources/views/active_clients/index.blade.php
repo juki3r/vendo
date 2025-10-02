@@ -20,7 +20,8 @@
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Voucher / Username</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP Address</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">MAC Address</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Minutes Granted</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Uptime</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time-left</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Seen</th>
                                 </tr>
                             </thead>
@@ -32,6 +33,7 @@
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $client->ip }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $client->mac }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $client->uptime }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $client->remaining_seconds }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $client->updated_at->format('Y-m-d H:i:s') }}</td>
                                     </tr>
                                 @endforeach
