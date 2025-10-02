@@ -69,4 +69,18 @@ class DashboardController extends Controller
 
         return view('history.index', compact('history'));
     }
+
+    //View all active Clients
+    public function showByDevice($device_id)
+    {
+        $clients = \App\Models\ActiveClient::where('device_id', $device_id)
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'device_id' => $device_id,
+            'clients' => $clients
+        ]);
+    }
 }
