@@ -28,10 +28,10 @@
                                 @foreach($clients as $index => $client)
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $index + 1 }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">{{ $client->voucher }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $client->username }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $client->ip }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $client->mac }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">{{ $client->minutes }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $client->uptime }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $client->updated_at->format('Y-m-d H:i:s') }}</td>
                                     </tr>
                                 @endforeach
