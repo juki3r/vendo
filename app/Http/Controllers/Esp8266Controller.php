@@ -140,7 +140,7 @@ class Esp8266Controller extends Controller
     }
 
     //Save Active clients belong to device made
-    public function store(Request $request)
+    public function storeActiveClients(Request $request)
     {
         $request->validate([
             'device_id' => 'required|string',
