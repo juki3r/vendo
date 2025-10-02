@@ -185,7 +185,6 @@ class Esp8266Controller extends Controller
             'clients.*.username' => 'required|string',
             'clients.*.ip'       => 'required|string',
             'clients.*.mac'      => 'required|string',
-            'clients.*.uptime'   => 'required|string',
             'clients.*.remaining_time' => 'required|string',
         ]);
 
@@ -195,10 +194,16 @@ class Esp8266Controller extends Controller
             $ip       = explode('|', $client['ip'])[0];
             $mac      = explode('|', $client['mac'])[0];
 
-            // Extract remaining_seconds from MikroTik string if needed
-            $remaining = $client['remaining_time'];
-            if (str_contains($remaining, '=session-time-left=')) {
-                preg_match('/=session-time-left=([0-9hms]+)/', $remaining, $matches);
+            // Extract uptime and remaining_seconds from remaining_time string
+            $raw = $client['remaining_time'];
+
+            // Uptime is before first '|'
+            $uptime = explode('|', $raw)[0] ?? '0s';
+
+            // Session time left
+            $remaining = '0s';
+            if (str_contains($raw, '=session-time-left=')) {
+                preg_match('/=session-time-left=([0-9hms]+)/', $raw, $matches);
                 $remaining = $matches[1] ?? '0s';
             }
 
@@ -211,11 +216,12 @@ class Esp8266Controller extends Controller
                     'user_id'           => $request->user_id,
                     'ip'                => $ip,
                     'mac'               => $mac,
-                    'uptime'            => explode('|', $client['uptime'])[0],
+                    'uptime'            => $uptime,
                     'remaining_seconds' => $remaining,
                 ]
             );
         }
+
 
         return response()->json([
             'status' => 'success',
