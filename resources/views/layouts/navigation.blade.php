@@ -28,6 +28,12 @@
                         {{ __("Sales History") }}
                     </x-nav-link>
                 </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('active_clients.index')" :active="request()->routeIs('active_clients.index')">
+                        {{ __("Active Clients") }}
+                    </x-nav-link>
+                </div>
             </div>
 
             <!-- Settings Dropdown -->
