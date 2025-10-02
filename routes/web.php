@@ -27,7 +27,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/view/sales', [DashboardController::class, 'viewSalesHistory'])->name('viewSalesHistory');
 
     //Display all active clients
-    Route::get('/active-clients/{device_id}', [DashboardController::class, 'showByDevice'])->name('viewActiveClients');
+    Route::get('/active-clients/{device_id}', [DashboardController::class, 'indexActiveClient'])
+        ->name('active_clients.index');
 });
 
 Route::middleware('auth')->group(function () {

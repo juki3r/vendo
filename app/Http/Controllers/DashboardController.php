@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Sales;
 use App\Models\Esp8266;
+use App\Models\ActiveClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -71,16 +72,15 @@ class DashboardController extends Controller
     }
 
     //View all active Clients
-    public function showByDevice($device_id)
+    public function indexActiveClient(Request $request)
     {
-        $clients = \App\Models\ActiveClient::where('device_id', $device_id)
+        $deviceId = $request->get('device_id'); // get device_id from query string or route
+
+        $clients = ActiveClient::where('user_id', auth()->id())
+            ->where('device_id', $deviceId)
             ->orderBy('updated_at', 'desc')
             ->get();
 
-        return response()->json([
-            'status' => 'success',
-            'device_id' => $device_id,
-            'clients' => $clients
-        ]);
+        return view('active_clients.index', compact('clients', 'deviceId'));
     }
 }
