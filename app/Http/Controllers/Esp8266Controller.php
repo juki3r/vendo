@@ -139,7 +139,43 @@ class Esp8266Controller extends Controller
         ], 201);
     }
 
-    //Save Active clients belong to device made
+    // //Save Active clients belong to device made
+    // public function storeActiveClients(Request $request)
+    // {
+    //     $request->validate([
+    //         'device_id' => 'required|string',
+    //         'user_id'   => 'required|string',
+    //         'clients'   => 'required|array',
+    //         'clients.*.username' => 'required|string',
+    //         'clients.*.ip'       => 'required|string',
+    //         'clients.*.mac'      => 'required|string',
+    //         'clients.*.uptime'   => 'required|string',
+    //         'clients.*.remaining_seconds'   => 'required|string',
+    //     ]);
+
+
+
+    //     foreach ($request->clients as $client) {
+    //         ActiveClient::updateOrCreate(
+    //             [
+    //                 'device_id' => $request->device_id,
+    //                 'username'  => explode('|', $client['username'])[0],
+    //             ],
+    //             [
+    //                 'user_id' => $request->user_id,
+    //                 'ip'      => explode('|', $client['ip'])[0],
+    //                 'mac'     => explode('|', $client['mac'])[0],
+    //                 'uptime'  => explode('|', $client['uptime'])[0],
+    //                 'uptime'  => explode('|', $client['remaining_seconds'])[0],
+    //             ]
+    //         );
+    //     }
+
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'message' => 'Active clients saved',
+    //     ]);
+    // }
     public function storeActiveClients(Request $request)
     {
         $request->validate([
@@ -150,23 +186,33 @@ class Esp8266Controller extends Controller
             'clients.*.ip'       => 'required|string',
             'clients.*.mac'      => 'required|string',
             'clients.*.uptime'   => 'required|string',
-            'clients.*.remaining_seconds'   => 'required|string',
+            'clients.*.remaining_seconds' => 'required|string',
         ]);
 
-
-
         foreach ($request->clients as $client) {
+            // Clean fields
+            $username = explode('|', $client['username'])[0];
+            $ip       = explode('|', $client['ip'])[0];
+            $mac      = explode('|', $client['mac'])[0];
+
+            // Extract remaining_seconds from MikroTik string if needed
+            $remaining = $client['remaining_seconds'];
+            if (str_contains($remaining, '=session-time-left=')) {
+                preg_match('/=session-time-left=([0-9hms]+)/', $remaining, $matches);
+                $remaining = $matches[1] ?? '0s';
+            }
+
             ActiveClient::updateOrCreate(
                 [
                     'device_id' => $request->device_id,
-                    'username'  => explode('|', $client['username'])[0],
+                    'username'  => $username,
                 ],
                 [
-                    'user_id' => $request->user_id,
-                    'ip'      => explode('|', $client['ip'])[0],
-                    'mac'     => explode('|', $client['mac'])[0],
-                    'uptime'  => explode('|', $client['uptime'])[0],
-                    'uptime'  => explode('|', $client['remaining_seconds'])[0],
+                    'user_id'           => $request->user_id,
+                    'ip'                => $ip,
+                    'mac'               => $mac,
+                    'uptime'            => explode('|', $client['uptime'])[0],
+                    'remaining_seconds' => $remaining,
                 ]
             );
         }
