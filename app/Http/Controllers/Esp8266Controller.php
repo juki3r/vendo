@@ -186,7 +186,7 @@ class Esp8266Controller extends Controller
             'clients.*.ip'       => 'required|string',
             'clients.*.mac'      => 'required|string',
             'clients.*.uptime'   => 'required|string',
-            'clients.*.remaining_seconds' => 'required|string',
+            'clients.*.remaining_time' => 'required|string',
         ]);
 
         foreach ($request->clients as $client) {
@@ -196,7 +196,7 @@ class Esp8266Controller extends Controller
             $mac      = explode('|', $client['mac'])[0];
 
             // Extract remaining_seconds from MikroTik string if needed
-            $remaining = $client['remaining_seconds'];
+            $remaining = $client['remaining_time'];
             if (str_contains($remaining, '=session-time-left=')) {
                 preg_match('/=session-time-left=([0-9hms]+)/', $remaining, $matches);
                 $remaining = $matches[1] ?? '0s';
