@@ -199,14 +199,13 @@ class Esp8266Controller extends Controller
             // Uptime is before first '|'
             $uptime = explode('|', $raw)[0] ?? '0s';
 
-            // Default remaining seconds
-            $remainingSeconds = 0;
-
-            // Extract session time left (in seconds)
-            if (preg_match('/=session-time-left=(\d+)/', $raw, $matches)) {
-                $remainingSeconds = (int)$matches[1];
+            // Extract session time left string (e.g., "1h58m10s")
+            $remainingTime = '0s';
+            if (preg_match('/=session-time-left=([0-9hms]+)/', $raw, $matches)) {
+                $remainingTime = $matches[1]; // Keep as string
             }
 
+            // Save to DB
             ActiveClient::updateOrCreate(
                 [
                     'device_id' => $request->device_id,
@@ -217,7 +216,7 @@ class Esp8266Controller extends Controller
                     'ip'                => $ip,
                     'mac'               => $mac,
                     'uptime'            => $uptime,
-                    'remaining_seconds' => $remainingSeconds,
+                    'remaining_seconds' => $remainingTime, // now string like "1h58m10s"
                 ]
             );
         }
