@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('active_clients', function (Blueprint $table) {
-            $table->integer('remaining_seconds')->default(0)->after('uptime');
+            $table->string('remaining_seconds')->after('uptime');
         });
     }
 
