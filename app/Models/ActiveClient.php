@@ -12,6 +12,7 @@ class ActiveClient extends Model
         'username',
         'ip',
         'mac',
-        'uptime'
+        'uptime',
+        'remaining_seconds'
     ];
 }
