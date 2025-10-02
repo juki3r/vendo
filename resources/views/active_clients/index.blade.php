@@ -35,7 +35,16 @@
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $client->uptime }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $client->remaining_seconds }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $client->updated_at->format('Y-m-d H:i:s') }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <form action="{{ route('clients.disconnect', $client->id) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                                                    Disconnect
+                                                </button>
+                                            </form>
+                                        </td>
                                     </tr>
+
                                 @endforeach
                             </tbody>
                         </table>

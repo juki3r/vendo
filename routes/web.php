@@ -29,6 +29,9 @@ Route::middleware('auth')->group(function () {
     //Display all active clients
     Route::get('/active-clients', [DashboardController::class, 'indexActiveClient'])
         ->name('active_clients.index');
+
+    //Remove Active client
+    Route::post('/clients/{id}/disconnect', [DashboardController::class, 'disconnect'])->name('clients.disconnect');
 });
 
 Route::middleware('auth')->group(function () {
