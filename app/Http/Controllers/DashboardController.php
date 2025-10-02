@@ -66,9 +66,9 @@ class DashboardController extends Controller
     {
         $query = Sales::where('user_id', Auth::id())->orderBy('created_at', 'desc');
 
-        $history = $query->paginate(10);
+        $sales = $query->paginate(10);
 
-        return view('history.index', compact('history'));
+        return view('history.index', compact('sales'));
     }
 
     //View all active Clients

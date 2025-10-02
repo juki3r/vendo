@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Sales') }}
+            {{ __('Sales History') }}
         </h2>
     </x-slot>
 <div class="py-12">
@@ -19,7 +19,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($history as $sale)
+                            @forelse($sales as $sale)
                                 <tr>
                                     <td>{{ $loop->iteration + ($sales->currentPage() - 1) * $sales->perPage() }}</td>
                                     <td>{{ $sale->voucher }}</td>
