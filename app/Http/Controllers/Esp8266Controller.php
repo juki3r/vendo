@@ -7,6 +7,7 @@ use App\Models\Sales;
 use App\Models\Esp8266;
 use App\Models\ActiveClient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class Esp8266Controller extends Controller
 {
@@ -176,59 +177,59 @@ class Esp8266Controller extends Controller
     //         'message' => 'Active clients saved',
     //     ]);
     // }
-    public function storeActiveClients(Request $request)
-    {
-        $request->validate([
-            'device_id' => 'required|string',
-            'user_id'   => 'required|string',
-            'clients'   => 'required|array',
-            'clients.*.username' => 'required|string',
-            'clients.*.ip'       => 'required|string',
-            'clients.*.mac'      => 'required|string',
-            'clients.*.remaining_time' => 'required|string',
-        ]);
+    // public function storeActiveClients(Request $request)
+    // {
+    //     $request->validate([
+    //         'device_id' => 'required|string',
+    //         'user_id'   => 'required|string',
+    //         'clients'   => 'required|array',
+    //         'clients.*.username' => 'required|string',
+    //         'clients.*.ip'       => 'required|string',
+    //         'clients.*.mac'      => 'required|string',
+    //         'clients.*.remaining_time' => 'required|string',
+    //     ]);
 
-        // Remove all current clients for this device first
-        ActiveClient::where('device_id', $request->device_id)->delete();
+    //     // Remove all current clients for this device first
+    //     ActiveClient::where('device_id', $request->device_id)->delete();
 
-        foreach ($request->clients as $client) {
-            // Clean fields
-            $username = explode('|', $client['username'])[0];
-            $ip       = explode('|', $client['ip'])[0];
-            $mac      = explode('|', $client['mac'])[0];
+    //     foreach ($request->clients as $client) {
+    //         // Clean fields
+    //         $username = explode('|', $client['username'])[0];
+    //         $ip       = explode('|', $client['ip'])[0];
+    //         $mac      = explode('|', $client['mac'])[0];
 
-            $raw = $client['remaining_time'];
+    //         $raw = $client['remaining_time'];
 
-            // Uptime is before first '|'
-            $uptime = explode('|', $raw)[0] ?? '0s';
+    //         // Uptime is before first '|'
+    //         $uptime = explode('|', $raw)[0] ?? '0s';
 
-            // Extract session time left string (e.g., "1h58m10s")
-            $remainingTime = '0s';
-            if (preg_match('/=session-time-left=([0-9hms]+)/', $raw, $matches)) {
-                $remainingTime = $matches[1]; // Keep as string
-            }
+    //         // Extract session time left string (e.g., "1h58m10s")
+    //         $remainingTime = '0s';
+    //         if (preg_match('/=session-time-left=([0-9hms]+)/', $raw, $matches)) {
+    //             $remainingTime = $matches[1]; // Keep as string
+    //         }
 
-            // Save to DB
-            ActiveClient::updateOrCreate(
-                [
-                    'device_id' => $request->device_id,
-                    'username'  => $username,
-                ],
-                [
-                    'user_id'           => $request->user_id,
-                    'ip'                => $ip,
-                    'mac'               => $mac,
-                    'uptime'            => $uptime,
-                    'remaining_seconds' => $remainingTime, // now string like "1h58m10s"
-                ]
-            );
-        }
+    //         // Save to DB
+    //         ActiveClient::updateOrCreate(
+    //             [
+    //                 'device_id' => $request->device_id,
+    //                 'username'  => $username,
+    //             ],
+    //             [
+    //                 'user_id'           => $request->user_id,
+    //                 'ip'                => $ip,
+    //                 'mac'               => $mac,
+    //                 'uptime'            => $uptime,
+    //                 'remaining_seconds' => $remainingTime, // now string like "1h58m10s"
+    //             ]
+    //         );
+    //     }
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Active clients saved',
-        ]);
-    }
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'message' => 'Active clients saved',
+    //     ]);
+    // }
     // public function storeActiveClients(Request $request)
     // {
     //     $request->validate([
@@ -286,4 +287,110 @@ class Esp8266Controller extends Controller
     //         'message' => 'Active clients replaced successfully.',
     //     ]);
     // }
+
+
+    public function storeActiveClients(Request $request)
+    {
+        $request->validate([
+            'device_id' => 'required|string',
+            'user_id'   => 'required|string',
+            // allow null/empty array so "no clients" will clear DB
+            'clients'   => 'nullable|array',
+            // only required when clients array is present
+            'clients.*.username'       => 'required_with:clients|string',
+            'clients.*.ip'             => 'required_with:clients|string',
+            'clients.*.mac'            => 'required_with:clients|string',
+            'clients.*.remaining_time' => 'required_with:clients|string',
+        ]);
+
+        $deviceId = $request->device_id;
+        $userId = $request->user_id;
+        $clients = $request->clients ?? [];
+
+        try {
+            DB::transaction(function () use ($deviceId, $userId, $clients) {
+                // 1) Delete existing for this device (use user_id if you want to be more specific)
+                ActiveClient::where('device_id', $deviceId)->delete();
+
+                // 2) If no clients, we're done (table already cleared)
+                if (empty($clients)) {
+                    return;
+                }
+
+                $now = now();
+                $rows = [];
+
+                foreach ($clients as $client) {
+                    $username = explode('|', $client['username'])[0] ?? ($client['username'] ?? null);
+                    $ip = explode('|', $client['ip'])[0] ?? ($client['ip'] ?? null);
+                    $mac = explode('|', $client['mac'])[0] ?? ($client['mac'] ?? null);
+
+                    $raw = $client['remaining_time'] ?? '';
+                    $uptime = explode('|', $raw)[0] ?? '0s';
+
+                    // Try to extract "=session-time-left=1h58m10s" pattern first
+                    $remainingStr = '0s';
+                    if (preg_match('/=session-time-left=([0-9hms]+)/', $raw, $m)) {
+                        $remainingStr = $m[1];
+                    } else {
+                        // fallback: maybe raw itself is "1h58m10s" or numeric seconds
+                        $remainingStr = $raw ?: '0s';
+                    }
+
+                    // convert to integer seconds (safe for INT DB column)
+                    $remainingSeconds = $this->durationToSeconds($remainingStr);
+
+                    $rows[] = [
+                        'device_id' => $deviceId,
+                        'user_id' => $userId,
+                        'username' => $username,
+                        'ip' => $ip,
+                        'mac' => $mac,
+                        'uptime' => $uptime,
+                        'remaining_seconds' => $remainingSeconds,
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ];
+                }
+
+                // bulk insert (avoids fillable/mass-assignment issues)
+                ActiveClient::insert($rows);
+            });
+        } catch (\Throwable $e) {
+            // log full payload and exception for debugging
+            Log::error('storeActiveClients failed: ' . $e->getMessage(), [
+                'exception' => $e,
+                'payload' => $request->all(),
+            ]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to store active clients: ' . $e->getMessage(),
+            ], 500);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Active clients replaced successfully.',
+        ]);
+    }
+
+    /**
+     * Accepts strings like "1h58m10s", "58m10s", "10s", or numeric seconds and returns int seconds.
+     */
+    private function durationToSeconds($str)
+    {
+        if (is_numeric($str)) {
+            return (int) $str;
+        }
+
+        $hours = 0;
+        $minutes = 0;
+        $seconds = 0;
+        if (preg_match('/(\d+)h/', $str, $m)) $hours = (int)$m[1];
+        if (preg_match('/(\d+)m/', $str, $m)) $minutes = (int)$m[1];
+        if (preg_match('/(\d+)s/', $str, $m)) $seconds = (int)$m[1];
+
+        return $hours * 3600 + $minutes * 60 + $seconds;
+    }
 }
